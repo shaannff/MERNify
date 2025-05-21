@@ -1,12 +1,23 @@
 import React, { useState } from 'react'
 import darklog from '../assets/darklog.jpg'
+import axios from 'axios';
+import { setUser } from '../redux/slice'
+import { useDispatch } from 'react-redux'
+import {useNavigate} from 'react-router-dom'
+
 
 const Login = () => {
+
+  const backendURL = 'http://localhost:7000/api/auth';
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const [formData,setFormData]=useState({
     email:'',
     password:''
   })
+  const [err,setErr]=useState('')
+  const [showerr,setErrShow]=useState(false)
   const onChangeHandle = async(e)=>{
     setFormData({
       ...formData,
@@ -16,13 +27,25 @@ const Login = () => {
 
   const handleSubmit=async(e)=>{
     e.preventDefault()
-    const {name,password}=formData
+    const {email,password}=formData
 
     if(!email || !password){
-      
+      setErrShow(true)
+      setErr('please fill the form ')
+      return
     }
+    const res = await axios.post(`${backendURL}/login`,formData)
+    if(res.status == 400){
+          setErrShow(true)
+          setErr(res.data)
+          return
+        }
+        console.log(res.data)
+        const {token ,user}=res.data
+        localStorage.setItem('token',token)
+        dispatch(setUser(res.data))
+        navigate('/')
 
-    console.log(formData)
   }
 
 
@@ -36,6 +59,9 @@ const Login = () => {
         >
           <div className="bg-black bg-opacity-70 p-8 rounded-xl w-[90%] max-w-sm shadow-2xl backdrop-blur-md">
             <h2 className="text-white text-3xl font-bold mb-6 text-center">Login</h2>
+            {showerr && (
+              <h5 className='text-red-500 text-center'>{err}</h5>
+            )  }
     
             <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
              

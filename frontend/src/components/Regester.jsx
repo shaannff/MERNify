@@ -33,15 +33,18 @@ const Regester = () => {
   if(!name || !email||!password){
     showErrSet(true)
     seterr('please fill the form ') 
+    return
   }
 
   try{  
-    const res = await axios.post(`${backendURL}/users`,formdata)
-    console.log('from backend ',res.data)
+    const res = await axios.post(`${backendURL}/register`,formdata)
     if(res.status == 400){
       showErrSet(true)
       seterr(res.data)
+      return
     }
+      const {token ,user}=res.data
+      localStorage.setItem('token',token)
     dispatch(setUser(res.data))
     navigate('/')
 

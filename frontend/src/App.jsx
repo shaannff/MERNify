@@ -3,7 +3,8 @@ import {BrowserRouter as Router, Routes,Route } from 'react-router-dom'
 import Home from "./components/Home";
 import Regester from "./components/Regester";
 import Login from "./components/Login";
-
+import Jokes from "./components/Jokes";
+import PrivateRoute from "./components/PrivateRoute";
 
 const App = () => {
   return (
@@ -15,14 +16,14 @@ const App = () => {
       <Route path="/" element={<Home/>}/>
       <Route path="/regester" element={<Regester/>}/>
       <Route path="/login" element={<Login/>}/>
+      <Route path="/jokes" element={<PrivateRoute><Jokes/></PrivateRoute>}/>
+
 
     </Routes>
 
     </Router>
     </>
-    // <div className="bg-green-200 s text-blue-800 p-4 text-xl font-bold">
-    //   ✅ Tailwind is now working!
-    // </div>
+   
   );
 }
  export default App
